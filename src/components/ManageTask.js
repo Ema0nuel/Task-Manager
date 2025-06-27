@@ -50,21 +50,23 @@ export function editTask(button) {
     })
 };
 
+/**
+ * Updates a task by setting its completed status to true.
+ * 
+ * @param {HTMLElement} button The button element that triggers the update.
+ * @param {Object[]} tasks The array of tasks.
+ */
 export function updateTask(button, tasks) {
     button.addEventListener("click", () => {
         const id = button.getAttribute("data-task");
-        tasks.forEach(async (task) => {
-            if (id === task.id) {
-                let obj = {
-                    id: task.id,
-                    taskName: task.taskName,
-                    completed: true,
-                }
-                let newTasks = tasks.filter((task) => task.id !== id);
-                newTasks.push(obj)
-                localStorage.setItem("tasks", JSON.stringify(newTasks));
-                loadPage("task");
-            }
-        })
+        const taskToUpdate = tasks.find(task => task.id === id);
+
+        if (taskToUpdate) {
+            const updatedTask = { ...taskToUpdate, completed: true };
+            const updatedTasks = tasks.map(task => task.id === id ? updatedTask : task);
+
+            localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+            loadPage("task");
+        }
     })
 }
